@@ -1,0 +1,28 @@
+name: Build Keyball39 firmware
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: qmkfm/base_container
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Build firmware
+        run: |
+          make SKIP_GIT=yes keyball/keyball39:default
+
+      - name: Upload firmware
+        uses: actions/upload-artifact@v2
+        with:
+          name: keyball39_firmware
+          path: |
+            *.hex
+            *.bin
